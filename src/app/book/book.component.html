@@ -1,0 +1,105 @@
+<div class="container">
+    <mat-card class="mat-elevation-z8">
+      <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px 
+  rgba(0,0,0,.2), 0 6px 10px 0 
+  rgba(0,0,0,.14), 0 1px 18px 0 
+  rgba(0,0,0,.12);">
+        <div  style="color:
+  white;text-align: right; align:center">
+          Codingvila | Angular 11 Application using Web API With Material Design
+        </div>
+      </mat-toolbar>
+      <br><br>
+      <mat-card-content>
+        <form [formGroup]="bookForm" (ngSubmit)="onFormSubmit()">
+          <table>
+            <tr>
+              <td class="tbl1">
+                <mat-form-field class="demo-full-width">
+                  <input formControlName="ISBN" matTooltip="Enter Book ISBN" matInput placeholder="ISBN" autocomplete="off">
+                </mat-form-field>
+                <mat-error>
+                  <span *ngIf="!bookForm.get('ISBN').value && bookForm.get('ISBN').touched"></span>
+                </mat-error>
+              </td>
+            </tr>
+            <tr>
+              
+      
+            </tr>
+            <tr>
+              <td class="content-center">
+                <button type="submit" mat-raised-button color="accent" matTooltip="Submit" [disabled]="!bookForm.valid">Submit</button>
+                <button type="reset" mat-raised-button color="accent" matTooltip="Reset" (click)="resetForm()">Reset</button>
+              </td>
+              <td>
+                <p *ngIf="dataSaved" style="color:
+  rgb(0, 128, 0);font-size:20px;font-weight:bold;align:'left'" Class="success" >
+                  {{massage}}
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+          <br><br>
+  
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+          </mat-form-field>
+  
+          <!-- <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="DeleteData()">
+              <mat-icon>delete</mat-icon></button> -->
+  
+          <div>
+  
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px 
+  rgba(0,0,0,.2), 0 6px 10px 0 
+  rgba(0,0,0,.14), 0 1px 18px 0 
+  rgba(0,0,0,.12);">
+  
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th style="width: 100px;" mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"></mat-checkbox>
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="ISBN">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ISBN </th>
+                <td mat-cell *matCellDef="let book"> {{book.ISBN}} </td>
+              </ng-container>
+  
+  
+              <ng-container matColumnDef="Edit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
+  
+                <td mat-cell *matCellDef="let book">
+  
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadBookToEdit(book.BookId)"><mat-icon>edit</mat-icon></button>
+  
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="Delete">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+                <td mat-cell *matCellDef="let book"> <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteBook(book.BookId)"><mat-icon>delete_forever</mat-icon></button></td>
+              </ng-container>
+  
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+  
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+          </div>
+  
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
