@@ -1,0 +1,81 @@
+<div class="container">
+    <mat-card class="mat-elevation-z8">
+      <mat-toolbar color="accent" style="box-shadow: 0 3px 5px -1px 
+  rgba(0,0,0,.2), 0 6px 10px 0 
+  rgba(0,0,0,.14), 0 1px 18px 0 
+  rgba(0,0,0,.12);">
+        <div  style="color:
+  white;text-align: right; align:center">
+          Codingvila | Angular 11 Application using Web API With Material Design
+        </div>
+      </mat-toolbar>
+      <br><br>
+      <mat-card-content>
+        <form [formGroup]="authorForm" (ngSubmit)="onFormSubmit()">
+          <table>
+            <tr>
+              <td class="tbl1">
+                <mat-form-field class="demo-full-width">
+                  <input formControlName="firstName" matTooltip="Enter Author First Name" matInput placeholder="First Name" autocomplete="off">
+                </mat-form-field>
+                <mat-error>
+                  <span *ngIf="!authorForm.get('FirstName').value && authorForm.get('FirstName').touched"></span>
+                </mat-error>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="tbl1">
+                <mat-form-field class="demo-full-width">
+                  <input formControlName="secondName" matTooltip="Enter Last Name" matInput placeholder="Last Name" autocomplete="off">
+                </mat-form-field>
+                <mat-error>
+                  <span *ngIf="!authorForm.get('LastName').value && authorForm.get('LastName').touched"></span>
+                </mat-error>
+              </td>
+      
+            </tr>
+
+          </table>
+          <br><br>
+          <div>
+  
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="box-shadow: 0 3px 5px -1px 
+  rgba(0,0,0,.2), 0 6px 10px 0 
+  rgba(0,0,0,.14), 0 1px 18px 0 
+  rgba(0,0,0,.12);">
+  
+            
+  
+              <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+                <td mat-cell *matCellDef="let author"> {{author.firstName}} </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="secondName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+                <td mat-cell *matCellDef="let author"> {{author.firstName}} </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="Edit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
+  
+                <td mat-cell *matCellDef="let author">
+  
+                  <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" type="button" mat-raised-button color="accent" matTooltip="Edit" (click)="loadAuthorToEdit(author.AuthorId)"><mat-icon>edit</mat-icon></button>
+  
+                </td>
+              </ng-container>
+  
+              <ng-container matColumnDef="Delete">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+                <td mat-cell *matCellDef="let author"> <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="deleteAuthor(author.AuthorId)"><mat-icon>delete_forever</mat-icon></button></td>
+              </ng-container>
+  
+            </table>
+          </div>
+  
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>

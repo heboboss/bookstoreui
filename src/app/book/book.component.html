@@ -24,7 +24,31 @@
               </td>
             </tr>
             <tr>
-              
+              <td class="tbl1">
+                <mat-form-field class="demo-full-width">
+                  <input formControlName="Name" matTooltip="Enter Book Name" matInput placeholder="ISBN" autocomplete="off">
+                </mat-form-field>
+                <mat-error>
+                  <span *ngIf="!bookForm.get('name').value && bookForm.get('name').touched"></span>
+                </mat-error>
+              </td>
+      
+            </tr>
+
+            <tr>
+              <td class="tbl1">
+                <mat-form-field appearance="fill">
+                  <mat-label>Favorite food</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let author of authors" [value]="author">
+                      {{author}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-error>
+                  <span *ngIf="!bookForm.get('authors').value && bookForm.get('authors').touched"></span>
+                </mat-error>
+              </td>
       
             </tr>
             <tr>
@@ -47,9 +71,6 @@
           <mat-form-field>
             <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
           </mat-form-field>
-  
-          <!-- <button mat-icon-button aria-label="Example icon button with a delete icon" type="button" mat-raised-button color="accent" matTooltip="Delete" (click)="DeleteData()">
-              <mat-icon>delete</mat-icon></button> -->
   
           <div>
   

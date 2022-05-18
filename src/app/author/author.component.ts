@@ -6,23 +6,21 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, of } from 'rxjs';
-import { Author, Book } from '../utils';
-import { BookService } from '../book.service';
+import { Author } from '../utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthorService } from '../author.service';
 
 @Component({
-  selector: 'app-book',
-  templateUrl: './book.component.html',
-  styleUrls: ['./book.component.scss']
+  selector: 'app-author',
+  templateUrl: './author.component.html',
+  styleUrls: ['./author.component.scss']
 })
-export class BookComponent implements OnInit {
+export class AuthorComponent implements OnInit {
   dataSaved = false;
-  bookForm: any;
-  allBooks: Observable<Book[]> = of([]);
-  dataSource: MatTableDataSource<Book> = {} as MatTableDataSource<Book>;
-  selection = new SelectionModel<Book>(true, []);
-  bookIdUpdate = 0;
+  authorForm: any;
+  allAuthors: Observable<Author[]> = of([]);
+  dataSource: MatTableDataSource<Author> = {} as MatTableDataSource<Author>;
+  selection = new SelectionModel<Author>(true, []);
   massage = null;
   CountryId = null;
   StateId = null;
@@ -37,17 +35,18 @@ export class BookComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort = {} as MatSort;
   ISBN: string = '';
   authors: Author[] = [];
+  authorIdUpdate: number = 0;
+  firstName: string = '';
+  lastName: string = '';
 
   constructor(
     private formbulider: FormBuilder,
-    private bookService: BookService,
     private authorService: AuthorService,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {
-    this.bookService.getAllBooks()
+    this.authorService.getAllAuthors()
     .subscribe(data => {
-      console.log('Ihab', data);
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -55,13 +54,11 @@ export class BookComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.bookForm = this.formbulider.group({
-      Name: ['', [Validators.required]],
-      ISBN: ['', [Validators.required]],
-      Authors: ['', [Validators.required]]
+    this.authorForm = this.formbulider.group({
+      FirstName: ['', [Validators.required]],
+      SecondName: ['', [Validators.required]],
     });
-    this.loadAllBooks();
-    this.loadAuthors();
+    this.loadAllAuthors();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -76,11 +73,11 @@ export class BookComponent implements OnInit {
     this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(r => this.selection.select(r));
   }
 
-  checkboxLabel(row: Book): string {
+  checkboxLabel(row: Author): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.BookId + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.AuthorId + 1}`;
   }
 
   applyFilter(filterValue: any) {
@@ -91,69 +88,66 @@ export class BookComponent implements OnInit {
     }
   }
 
-  loadAllBooks() {
-    this.bookService.getAllBooks().subscribe(data => {
+  loadAllAuthors() {
+    this.authorService.getAllAuthors().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
 
-  loadAuthors() {
-    this.authorService.getAllAuthors().subscribe(data => {
-      this.authors = data;
-    });
-  }
 
   onFormSubmit() {
     this.dataSaved = false;
-    const book = this.bookForm.value;
-    this.CreateBook(book);
-    this.bookForm.reset();
+    const author = this.authorForm.value;
+    this.CreateAuthor(author);
+    this.authorForm.reset();
   }
 
-  loadBookToEdit(bookId: number) {
-    this.bookService.getBookById(bookId).subscribe(book => {
+  loadAuthorToEdit(authorId: number) {
+    this.authorService.getAuthorById(authorId).subscribe(author => {
       this.massage = null;
       this.dataSaved = false;
-      this.bookIdUpdate = book.BookId;
-      this.bookForm.controls['ISBN'].setValue(book.ISBN);
+      this.authorIdUpdate = author.AuthorId;
+      this.authorForm.controls['FirstName'].setValue(author.FirstName);
+      this.authorForm.controls['LastName'].setValue(author.LastName);
+
     });
 
   }
 
-  CreateBook(book: Book) {
-    //console.log(book.DateofBirth);
-    if (this.bookIdUpdate == null) {
-      this.bookService.createBook(book).subscribe(
+  CreateAuthor(author: Author) {
+    if (this.authorIdUpdate == null) {
+      this.authorService.createAuthor(author).subscribe(
         () => {
           this.dataSaved = true;
           this.SavedSuccessful(1);
-          this.loadAllBooks();
-          this.bookIdUpdate = 0;
-          this.bookForm.reset();
+          this.loadAllAuthors();
+          this.authorIdUpdate = 0;
+          this.authorForm.reset();
         }
       );
     } else {
-      book.BookId = this.bookIdUpdate;
-      book.ISBN = this.ISBN;
-      this.bookService.updateBook(book).subscribe(() => {
+      author.AuthorId = this.authorIdUpdate;
+      author.FirstName = this.firstName;
+      author.LastName = this.lastName;
+      this.authorService.updateAuthor(author).subscribe(() => {
         this.dataSaved = true;
         this.SavedSuccessful(0);
-        this.loadAllBooks();
-        this.bookIdUpdate = 0;
-        this.bookForm.reset();
+        this.loadAllAuthors();
+        this.authorIdUpdate = 0;
+        this.authorForm.reset();
       });
     }
   }
-  deleteBook(bookId: number) {
+  deleteAuthor(authorId: number) {
     if (confirm("Are you sure you want to delete this ?")) {
-      this.bookService.deleteBookById(bookId).subscribe(() => {
+      this.authorService.deleteAuthorById(authorId).subscribe(() => {
         this.dataSaved = true;
         this.SavedSuccessful(2);
-        this.loadAllBooks();
-        this.bookIdUpdate = 0;
-        this.bookForm.reset();
+        this.loadAllAuthors();
+        this.authorIdUpdate = 0;
+        this.authorForm.reset();
 
       });
     }
@@ -161,10 +155,10 @@ export class BookComponent implements OnInit {
   }
 
   resetForm() {
-    this.bookForm.reset();
+    this.authorForm.reset();
     this.massage = null;
     this.dataSaved = false;
-    this.loadAllBooks();
+    this.loadAllAuthors();
   }
 
   SavedSuccessful(isUpdate: number) {

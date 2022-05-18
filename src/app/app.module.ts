@@ -26,10 +26,12 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { BookComponent } from './book/book.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AuthorComponent } from './author/author.component';
 @NgModule({
   declarations: [
     AppComponent,
-    BookComponent
+    BookComponent,
+    AuthorComponent
   ],
   imports: [
     BrowserModule,
